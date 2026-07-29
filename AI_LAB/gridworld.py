@@ -26,24 +26,29 @@ def reach_goal(grid, source, goal):
         direction["vertical"] = "up"
         vertdist = -vertdist
 
+    # show initial source position
+    print(f"Initial position of Agent: {source["row"], source["col"]}\n")
+
     # till horizontal distance becomes zero, move to respective direction horizontally step by step
+    print("--- Starting horizontal row movement ---\n")
     while(horizdist > 0):
         if(flag["horizontal"]):
             source["row"] += 1
         else:
             source["row"] -= 1
 
-        print(f"Move {direction["horizontal"]}: Position({source["row"], source["col"]})")
+        print(f"Move {direction["horizontal"]}: Position{source["row"], source["col"]}")
         horizdist -= 1
     
     # till vertical distance becomes zero, move to respective direction vertically step by step
+    print("\n--- Starting vertical column movement ---\n")
     while(vertdist > 0):
         if(flag["vertical"]):
             source["col"] += 1
         else:
             source["col"] -= 1
 
-        print(f"Move {direction["vertical"]}: Position({source["row"], source["col"]})")
+        print(f"Move {direction["vertical"]}: Position{source["row"], source["col"]}")
         vertdist -= 1
 
     return 0
@@ -51,7 +56,7 @@ def reach_goal(grid, source, goal):
 
 # function to get dimention. use"dimension of grid" for grid and position of source/goal for their position resp.
 def get_dim(name):
-    row, col = input(f"Enter {name} (row col): ").split(" ")
+    row, col = input(f"Enter {name} (row col): ").strip().split(" ")
     row = int(row)
     col = int(col)
 
@@ -91,8 +96,12 @@ def main():
         sys.exit(1)
 
 
+    print("\n=== Agent started ===\n")
+
     # calls function reach_goal() to perform agent movement
     status = reach_goal(grid, source, goal)
+
+    print("\n=== Agent completed execution ===\n")
 
     # checks the return status of reach_goal() function. 0 == success
     if (status == 0):
