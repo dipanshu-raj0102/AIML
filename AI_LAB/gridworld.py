@@ -27,7 +27,7 @@ def reach_goal(grid, source, goal):
         vertdist = -vertdist
 
     # show initial source position
-    print(f"Initial position of Agent: {source["row"], source["col"]}\n")
+    print(f'Initial position of Agent: {source["row"], source["col"]}\n')
 
     # till horizontal distance becomes zero, move to respective direction horizontally step by step
     print("--- Starting horizontal row movement ---\n")
@@ -37,7 +37,7 @@ def reach_goal(grid, source, goal):
         else:
             source["row"] -= 1
 
-        print(f"Move {direction["horizontal"]}: Position{source["row"], source["col"]}")
+        print(f'Move {direction["horizontal"]}: Position{source["row"], source["col"]}')
         horizdist -= 1
     
     # till vertical distance becomes zero, move to respective direction vertically step by step
@@ -48,7 +48,7 @@ def reach_goal(grid, source, goal):
         else:
             source["col"] -= 1
 
-        print(f"Move {direction["vertical"]}: Position{source["row"], source["col"]}")
+        print(f'Move {direction["vertical"]}: Position{source["row"], source["col"]}')
         vertdist -= 1
 
     return 0
@@ -64,6 +64,7 @@ def get_dim(name):
 
 
 def main():
+
     grid = {
         "row": 0,
         "col": 0,
@@ -84,14 +85,14 @@ def main():
     source["row"], source["col"] = get_dim("position of source")
 
     #checks whether the source is under the boundary of grid
-    if ((source["row"] < 0 or source["row"] > grid["row"]) or (source["col"] < 0 or source["col"] > grid["col"])):
+    if ((source["row"] < 0 or source["row"] >= grid["row"]) or (source["col"] < 0 or source["col"] >= grid["col"])):
         print("Error!! Position of source cannot be less than 0 or greater than grid size")
         sys.exit(1)
 
     goal["row"], goal["col"] = get_dim("position of goal")
     
     # checks whether the goal is under the boundary of grid
-    if ((goal["row"] < 0 or goal["row"] > grid["row"]) or (goal["col"] < 0 or goal["col"] > grid["col"])):
+    if ((goal["row"] < 0 or goal["row"] >= grid["row"]) or (goal["col"] < 0 or goal["col"] >= grid["col"])):
         print("Error!! Position of goal cannot be less than 0 or greater than grid size")
         sys.exit(1)
 
@@ -105,7 +106,7 @@ def main():
 
     # checks the return status of reach_goal() function. 0 == success
     if (status == 0):
-        print(f"Reached Goal({goal["row"], goal["col"]})")
+        print(f'Reached Goal({goal["row"], goal["col"]})')
         print("Agent Shutting Down!! GoodBye!")
     else:
         print("Mission failed!! Agent could not reach the target goal")
