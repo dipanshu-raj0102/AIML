@@ -1,9 +1,8 @@
 import numpy as np 
 import matplotlib.pyplot as plt 
-from utils import * 
 import copy 
+from utils import *
 import math 
-%matplotlib inline 
 
 def compute_cost(x, y, w, b):
 
@@ -35,7 +34,31 @@ def compute_gradient(x, y, w, b):
     dj_dw = dj_dw / m 
     return dj_dw, dj_db
 
-    
+
+def gradient_descent(x, y, w_in, b_in, cost_function, gradient_function, alpha, num_iters):
+
+    J_history = []
+    w_history = []
+    w = copy.deepcopy(w_in)
+    b = b_in 
+
+    for i in range(num_iters):
+
+        dj_dw, dj_db = gradient_function(x, y, w, b)
+
+        w = w - alpha * dj_dw
+        b = b - alpha * dj_db 
+
+        if i < 100000:
+            cost = cost_function(x, y, w, b)
+            J_history.append(cost)
+
+        if (i % math.ceil(num_iters/ 10) == 0):
+            w_history.append(w)
+            print(f"Iteration {i:4}: Cost {float(J_history[-1]):8.2f}   ")
+
+    return w, b, J_history, w_history
+
 
 
 def main():
@@ -60,5 +83,47 @@ def main():
     plt.xlabel('Population of City in 10,000s')
     plt.show()
 
+    initial_w = 0.
+    initial_b = 0.
+
+    # some gradient descent settings
+    iterations = 100000
+    alpha = 0.002
+
+    w,b,_,_ = gradient_descent(x_train ,y_train, initial_w, initial_b, compute_cost, compute_gradient, alpha, iterations)
+    print("w,b found by gradient descent:", w, b)
+
+
+
+    m = x_train.shape[0]
+    predicted = np.zeros(m)
+
+    for i in range(m):
+        predicted[i] = w * x_train[i] + b
+        
+    # Plot the linear fit
+    plt.plot(x_train, predicted, c = "b")
+
+    # Create a scatter plot of the data. 
+    plt.scatter(x_train, y_train, marker='x', c='r') 
+
+    # Set the title
+    plt.title("Profits vs. Population per city")
+    # Set the y-axis label
+    plt.ylabel('Profit in $10,000')
+    # Set the x-axis label
+    plt.xlabel('Population of City in 10,000s')
+
+
+    predict1 = 3.5 * w + b
+    print('For population = 35,000, we predict a profit of $%.2f' % (predict1*10000))
+
+    predict2 = 7.0 * w + b
+    print('For population = 70,000, we predict a profit of $%.2f' % (predict2*10000))
+
     return 
+
+
+if __name__ == "__main__":
+    main()
 
