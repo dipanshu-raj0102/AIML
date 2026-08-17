@@ -106,36 +106,94 @@ def gradient_descent(X, y, w_in, b_in, cost_function, gradient_function, alpha, 
 
 
 
+# UNQ_C5
+def compute_cost_reg(X, y, w, b, lambda_ = 1):
+    """
+    Computes the cost over all examples
+    Args:
+      X : (ndarray Shape (m,n)) data, m examples by n features
+      y : (ndarray Shape (m,))  target value 
+      w : (ndarray Shape (n,))  values of parameters of the model      
+      b : (scalar)              value of bias parameter of the model
+      lambda_ : (scalar, float) Controls amount of regularization
+    Returns:
+      total_cost : (scalar)     cost 
+    """
+
+    m, n = X.shape
+    
+    # Calls the compute_cost function that you implemented above
+    cost_without_reg = compute_cost(X, y, w, b) 
+    
+    # You need to calculate this value
+    reg_cost = 0.
+    
+    ### START CODE HERE ###
+    for i in range(n):
+        reg_cost += w[i] ** 2
+    
+    reg_cost = reg_cost * (lambda_ / (2 * m))
+    
+    ### END CODE HERE ### 
+    
+    # Add the regularization cost to get the total cost
+    total_cost = cost_without_reg + reg_cost
+
+    return total_cost
 
 
 
+# UNQ_C6
+def compute_gradient_reg(X, y, w, b, lambda_ = 1): 
+    """
+    Computes the gradient for logistic regression with regularization
+ 
+    Args:
+      X : (ndarray Shape (m,n)) data, m examples by n features
+      y : (ndarray Shape (m,))  target value 
+      w : (ndarray Shape (n,))  values of parameters of the model      
+      b : (scalar)              value of bias parameter of the model
+      lambda_ : (scalar,float)  regularization constant
+    Returns
+      dj_db : (scalar)             The gradient of the cost w.r.t. the parameter b. 
+      dj_dw : (ndarray Shape (n,)) The gradient of the cost w.r.t. the parameters w. 
 
+    """
+    m, n = X.shape
+    
+    dj_db, dj_dw = compute_gradient(X, y, w, b)
 
+    ### START CODE HERE ###     
+    for i in range(n):
+        dj_dw[i] += (lambda_ / m) * w[i]
+        
+    ### END CODE HERE ###         
+        
+    return dj_db, dj_dw
 
 
 
 
 def main():
-    X_train, y_train = load_data("data/ex2data1.txt")
+    X_train, y_train = load_data("data/ex2data2.txt")
 
+# Initialize fitting parameters
+    X_mapped = map_feature(X_train[:, 0], X_train[:, 1])
     np.random.seed(1)
-    initial_w = 0.01 * (np.random.rand(2) - 0.5)
-    initial_b = -8
+    initial_w = np.random.rand(X_mapped.shape[1])-0.5
+    initial_b = 1.
+
+# Set regularization parameter lambda_ (you can try varying this)
+    lambda_ = 0.01    
 
 # Some gradient descent settings
     iterations = 10000
-    alpha = 0.001
+    alpha = 0.01
 
-    w,b, J_history,_ = gradient_descent(X_train ,y_train, initial_w, initial_b, 
-                                   compute_cost, compute_gradient, alpha, iterations, 0)
+    w,b, J_history,_ = gradient_descent(X_mapped, y_train, initial_w, initial_b, 
+                                    compute_cost_reg, compute_gradient_reg, 
+                                    alpha, iterations, lambda_)    
 
-    plot_decision_boundary(w, b, X_train, y_train)
-# Set the y-axis label
-    plt.ylabel('Exam 2 score') 
-# Set the x-axis label
-    plt.xlabel('Exam 1 score') 
-    plt.legend(loc="upper right")
-    plt.show()
-
+   
 if __name__ == "__main__":
     main()
